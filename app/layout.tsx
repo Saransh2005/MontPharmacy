@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar"; // Agar path error aaye toh ../components/Navbar use karna
 import Footer from "./components/Footer";
-import { CartProvider } from "./context/CartContext"; // <-- STEP A: Import kiya
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CartProvider> {/* <-- STEP B: Wrap kar diya */}
-          <Navbar />
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
           {children}
           <Footer />
         </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

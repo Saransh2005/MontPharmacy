@@ -1,14 +1,8 @@
 import ProductCard from "./ProductCard";
-
-// Nakli Data (Baad mein Database se aayega)
-const medicines = [
-  { id: 1, name: "Paracetamol 650", category: "Fever", price: 30, image: "" },
-  { id: 2, name: "Vitamin C Serum", category: "Skincare", price: 499, image: "" },
-  { id: 3, name: "Sugar Free Gold", category: "Diabetic", price: 250, image: "" },
-  { id: 4, name: "Whey Protein", category: "Fitness", price: 2400, image: "" },
-];
+import { ALL_MEDICINES } from "@/lib/medicines";
 
 const FeaturedProducts = () => {
+  const medicines = ALL_MEDICINES.slice(0, 4);
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 md:px-8">

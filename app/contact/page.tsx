@@ -1,6 +1,35 @@
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { MapPin, Phone, Mail, Clock, Send, Loader2, CheckCircle } from "lucide-react";
 
 export default function Contact() {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    setStatus("submitting");
+    try {
+      const response = await fetch(
+        `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID}`,
+        {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" },
+        }
+      );
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
   return (
     <main className="min-h-screen bg-slate-50 py-12">
       
@@ -69,24 +98,42 @@ export default function Contact() {
           <div className="md:w-2/3 p-8 md:p-12">
             <h2 className="text-2xl font-bold text-slate-800 mb-6">Send us a Message</h2>
             
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Name */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Full Name</label>
-                  <input type="text" placeholder="John Doe" className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <label htmlFor="name" className="block text-sm font-medium text-slate-600 mb-1">Full Name</label>
+                  <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="John Doe"
+                    required
+                    className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
+                  />
                 </div>
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">Email Address</label>
-                  <input type="email" placeholder="john@example.com" className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-600 mb-1">Email Address</label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="_replyto"
+                    placeholder="john@example.com"
+                    required
+                    className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
+                  />
                 </div>
               </div>
 
               {/* Subject */}
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Subject</label>
-                <select className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                <label htmlFor="subject" className="block text-sm font-medium text-slate-600 mb-1">Subject</label>
+                <select
+                  id="subject"
+                  name="subject"
+                  className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-white"
+                >
                   <option>General Inquiry</option>
                   <option>Order Status</option>
                   <option>Partnership / Distribution</option>
@@ -96,14 +143,46 @@ export default function Contact() {
 
               {/* Message */}
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">Message</label>
-                <textarea rows={4} placeholder="Type your message here..." className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
+                <label htmlFor="message" className="block text-sm font-medium text-slate-600 mb-1">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  placeholder="Type your message here..."
+                  required
+                  className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
+                />
               </div>
 
+              {status === "success" && (
+                <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-2">
+                  <CheckCircle size={20} />
+                  <span>Message sent! We&apos;ll get back to you within 24 hours.</span>
+                </div>
+              )}
+              {status === "error" && (
+                <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
+                  Something went wrong. Please try again later.
+                </div>
+              )}
+
               {/* Submit Button */}
-              <button className="bg-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-teal-700 transition-colors flex items-center gap-2">
-                Send Message
-                <Send size={18} />
+              <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="bg-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-teal-700 transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {status === "submitting" ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <Send size={18} />
+                  </>
+                )}
               </button>
             </form>
           </div>

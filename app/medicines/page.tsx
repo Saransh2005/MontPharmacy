@@ -1,19 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import { Search, Filter } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-
-// Nakli Data (Baad mein Database se aayega)
-const allMedicines = [
-  { id: 1, name: "Paracetamol 650", category: "Fever", price: 30, image: "" },
-  { id: 2, name: "Vitamin C Serum", category: "Skincare", price: 499, image: "" },
-  { id: 3, name: "Sugar Free Gold", category: "Diabetic", price: 250, image: "" },
-  { id: 4, name: "Whey Protein", category: "Fitness", price: 2400, image: "" },
-  { id: 5, name: "Cough Syrup", category: "Cold & Flu", price: 120, image: "" },
-  { id: 6, name: "Pain Relief Gel", category: "Pain Relief", price: 150, image: "" },
-  { id: 7, name: "Calcium Tablets", category: "Supplements", price: 399, image: "" },
-  { id: 8, name: "Face Wash (Neem)", category: "Skincare", price: 199, image: "" },
-];
+import { ALL_MEDICINES, searchMedicines } from "@/lib/medicines";
 
 export default function Medicines() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const displayedMedicines =
+    searchQuery.trim() === ""
+      ? ALL_MEDICINES
+      : searchMedicines(searchQuery);
   return (
     <main className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 md:px-8">
@@ -75,20 +72,20 @@ export default function Medicines() {
             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-8 flex gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-3 text-slate-400" size={20} />
-                <input 
-                  type="text" 
-                  placeholder="Search for medicines..." 
+                <input
+                  type="text"
+                  placeholder="Search for medicines..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all"
                 />
               </div>
-              <button className="bg-teal-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-teal-700 transition-colors">
-                Search
-              </button>
             </div>
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allMedicines.map((item) => (
+              {displayedMedicines.length > 0 ? (
+                displayedMedicines.map((item) => (
                 <ProductCard 
                   key={item.id} 
                   id={item.id}
@@ -97,7 +94,12 @@ export default function Medicines() {
                   price={item.price} 
                   image={item.image} 
                 />
-              ))}
+              ))
+              ) : (
+                <p className="col-span-full text-center py-12 text-slate-500">
+                  No medicines found. Try a different search.
+                </p>
+              )}
             </div>
 
           </div>

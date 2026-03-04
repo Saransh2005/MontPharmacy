@@ -3,15 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 
-export default function Login() {
+export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, loading, login, loginWithGoogle, error, clearError } = useAuth();
+  const { user, loading, signup, loginWithGoogle, error, clearError } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Login() {
     setIsSubmitting(true);
     clearError();
     try {
-      await login(email, password);
+      await signup(email, password, displayName || undefined);
       router.push("/");
       router.refresh();
     } catch {
@@ -35,7 +36,7 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     setIsSubmitting(true);
     clearError();
     try {
@@ -52,7 +53,6 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
-        {/* Left Side: Branding */}
         <div className="md:w-1/2 bg-teal-900 text-white p-8 md:p-12 flex flex-col justify-between relative overflow-hidden">
           <div className="absolute top-0 left-0 w-32 h-32 bg-teal-800 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-50"></div>
           <div className="absolute bottom-0 right-0 w-40 h-40 bg-teal-600 rounded-full translate-x-1/3 translate-y-1/3 opacity-30"></div>
@@ -78,9 +78,10 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Right Side: Login Form */}
         <div className="md:w-1/2 p-8 md:p-12">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">Welcome Back!</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-6">
+            Create Account
+          </h2>
 
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
@@ -89,6 +90,25 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-1">
+                Full Name
+              </label>
+              <div className="relative">
+                <User
+                  className="absolute left-3 top-3 text-slate-400"
+                  size={18}
+                />
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-slate-600 mb-1">
                 Email Address
@@ -124,17 +144,13 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  minLength={6}
                   className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all"
                 />
               </div>
-              <div className="flex justify-end mt-1">
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-teal-600 hover:underline"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                Minimum 6 characters
+              </p>
             </div>
 
             <button
@@ -146,7 +162,7 @@ export default function Login() {
                 <Loader2 size={18} className="animate-spin" />
               ) : (
                 <>
-                  Sign In
+                  Create Account
                   <ArrowRight size={18} />
                 </>
               )}
@@ -166,7 +182,7 @@ export default function Login() {
 
           <button
             type="button"
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleSignup}
             disabled={isSubmitting}
             className="w-full border border-gray-300 bg-white text-slate-700 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
@@ -192,12 +208,12 @@ export default function Login() {
           </button>
 
           <p className="text-center text-sm text-slate-600 mt-6">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="text-teal-600 font-bold hover:underline"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
         </div>

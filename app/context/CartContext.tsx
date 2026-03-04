@@ -2,19 +2,20 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-// Types define kar rahe hain
-interface CartItem {
+export interface CartItem {
   id: number;
   name: string;
   price: number;
   quantity: number;
-  image: string; // Image bhi zaroori hai display ke liye
+  image: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
+  decreaseQuantity: (id: number) => void;
+  clearCart: () => void;
   totalPrice: number;
 }
 
@@ -45,11 +46,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // 3. Total Price Calculation
+  // 3. Decrease Quantity (remove if 1)
+  const decreaseQuantity = (id: number) => {
+    setCart((prevCart) => {
+      const item = prevCart.find((i) => i.id === id);
+      if (!item || item.quantity <= 1) {
+        return prevCart.filter((i) => i.id !== id);
+      }
+      return prevCart.map((i) =>
+        i.id === id ? { ...i, quantity: i.quantity - 1 } : i
+      );
+    });
+  };
+
+  // 4. Clear Cart (after order placed)
+  const clearCart = () => setCart([]);
+
+  // 5. Total Price Calculation
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, totalPrice }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, decreaseQuantity, clearCart, totalPrice }}>
       {children}
     </CartContext.Provider>
   );

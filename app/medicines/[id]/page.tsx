@@ -20,7 +20,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-1 md:grid-cols-2">
             
             {/* Left: Product Image */}
-            <div className="bg-slate-100 flex items-center justify-center p-12 min-h-[400px]">
+            <div className="bg-slate-100 flex items-center justify-center p-12 min-h-100">
               <div className="text-9xl animate-pulse">💊</div>
             </div>
 

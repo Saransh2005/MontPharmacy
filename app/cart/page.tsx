@@ -1,13 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Trash2, ArrowRight } from "lucide-react";
-import { useCart } from "@/app/context/CartContext"; // Path check karna
+import { useRouter } from "next/navigation";
+import { Trash2, ArrowRight, Loader2 } from "lucide-react";
+import { useCart } from "@/app/context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
+import { createOrder } from "@/lib/orders";
 
 export default function Cart() {
-  const { cart, removeFromCart, totalPrice } = useCart(); // <-- Data liya
+  const { cart, removeFromCart, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [placing, setPlacing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  if (cart.length === 0) {
+  const handleCheckout = async () => {
+    if (!user) {
+      router.push("/login?redirect=/cart");
+      return;
+    }
+    if (cart.length === 0) return;
+
+    setPlacing(true);
+    setError(null);
+    try {
+      await createOrder(
+        user.uid,
+        user.email ?? "",
+        user.displayName ?? user.email ?? "User",
+        cart,
+        totalPrice
+      );
+      clearCart();
+      router.push("/orders");
+    } catch {
+      setError("Failed to place order. Please try again.");
+    } finally {
+      setPlacing(false);
+    }
+  };
+
+  if (cart.length === 0 && !placing) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
         <h2 className="text-2xl font-bold text-slate-400">Your Cart is Empty</h2>
@@ -69,9 +103,23 @@ export default function Cart() {
                 <span>₹{totalPrice}</span>
               </div>
 
-              <button className="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700 transition-all flex items-center justify-center gap-2">
-                Proceed to Checkout
-                <ArrowRight size={18} />
+              {error && (
+                <p className="text-red-600 text-sm mb-2">{error}</p>
+              )}
+
+              <button
+                onClick={handleCheckout}
+                disabled={placing}
+                className="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {placing ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <>
+                    Proceed to Checkout
+                    <ArrowRight size={18} />
+                  </>
+                )}
               </button>
             </div>
           </div>
