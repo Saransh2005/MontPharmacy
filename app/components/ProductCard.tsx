@@ -5,14 +5,14 @@ import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
 
 interface ProductProps {
-  id: number;
+  id: string;
   name: string;
-  category: string;
+  category?: string;
   price: number;
   image: string;
 }
 
-const ProductCard = ({ id, name, category, price, image }: ProductProps) => {
+const ProductCard = ({ id, name, category = "", price, image }: ProductProps) => {
   const { cart, addToCart, decreaseQuantity } = useCart();
   const cartItem = cart.find((item) => item.id === id);
   const quantity = cartItem?.quantity ?? 0;
@@ -40,7 +40,15 @@ const ProductCard = ({ id, name, category, price, image }: ProductProps) => {
       <div className="bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
         
         <div className="relative h-48 w-full bg-slate-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
-          <div className="text-4xl">💊</div>
+          {image ? (
+            <img
+              src={image}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-4xl">💊</div>
+          )}
         </div>
 
         <div>

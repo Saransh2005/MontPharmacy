@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Mail, Lock, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 
@@ -13,12 +13,14 @@ export default function Login() {
 
   const { user, loading, login, loginWithGoogle, error, clearError } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/");
+      router.replace(redirectTo);
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, redirectTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ export default function Login() {
     clearError();
     try {
       await login(email, password);
-      router.push("/");
+      router.push(redirectTo);
       router.refresh();
     } catch {
       // Error shown from context
@@ -40,7 +42,7 @@ export default function Login() {
     clearError();
     try {
       await loginWithGoogle();
-      router.push("/");
+      router.push(redirectTo);
       router.refresh();
     } catch {
       // Error shown from context

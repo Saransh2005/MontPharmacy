@@ -2,21 +2,30 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, User, Search, Menu, X, LogOut, Package } from "lucide-react";
+import { ShoppingCart, User, Search, Menu, X, LogOut, Package, Shield } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
-import { searchMedicines } from "@/lib/medicines";
+import { subscribeMedicines, searchMedicines } from "@/lib/medicines";
+import type { Medicine } from "@/lib/medicines";
+
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase().trim();
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const { cart } = useCart();
   const { user, loading, signOut } = useAuth();
+  const isAdmin = ADMIN_EMAIL && user?.email?.toLowerCase() === ADMIN_EMAIL;
 
-  const searchResults = searchMedicines(searchQuery);
+  useEffect(() => {
+    return subscribeMedicines(setMedicines);
+  }, []);
+
+  const searchResults = searchMedicines(medicines, searchQuery);
 
   useEffect(() => {
     if (searchOpen) {
@@ -43,6 +52,12 @@ const Navbar = () => {
           <Link href="/medicines" className="hover:text-teal-600">Medicines</Link>
           <Link href="/about" className="hover:text-teal-600">Company</Link>
           <Link href="/contact" className="hover:text-teal-600">Contact</Link>
+          {isAdmin && (
+            <Link href="/admin" className="flex items-center gap-1 text-amber-600 hover:text-amber-700 font-bold">
+              <Shield size={16} />
+              Admin
+            </Link>
+          )}
         </div>
 
         {/* Right Icons */}
@@ -156,6 +171,16 @@ const Navbar = () => {
               >
                 Contact
               </Link>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-2 block py-3 px-4 rounded-lg text-amber-600 font-bold hover:bg-amber-50 transition-colors"
+                  onClick={closeMobileMenu}
+                >
+                  <Shield size={18} />
+                  Admin Dashboard
+                </Link>
+              )}
               {user && (
                 <Link
                   href="/orders"

@@ -1,4 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mont Pharmacy
+
+Online medicine store built with Next.js and Firebase.
+
+## Firebase Setup (Medicines & Admin)
+
+1. **Firestore Database**: Enable Firestore in [Firebase Console](https://console.firebase.google.com) → Build → Firestore Database → Create database. Use test mode for development, or configure rules:
+
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /medicines/{doc} {
+         allow read: if true;  // Public read for medicines
+         allow write: if request.auth != null;  // Authenticated users (admin uses email check in app)
+       }
+       match /orders/{doc} { allow read, write: if request.auth != null; }
+       match /users/{doc} { allow read, write: if request.auth != null; }
+     }
+   }
+   ```
+
+2. **Medicine images**: Use image URLs in the Admin form (e.g. from Imgur, your website). Firebase Storage is not required.
+
+3. **Admin access**: Set `NEXT_PUBLIC_ADMIN_EMAIL` in `.env.local` to the pharmacy owner's email. Only this email can access `/admin`.
+
+4. **Optional seed (sample medicines)**: Run `npx dotenv -e .env.local -- npx tsx scripts/seed-medicines.ts` (requires `tsx` and `dotenv-cli`) to add sample medicines, or add them via the Admin Dashboard.
 
 ## Getting Started
 

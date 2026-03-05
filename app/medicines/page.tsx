@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Filter } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-import { ALL_MEDICINES, searchMedicines } from "@/lib/medicines";
+import {
+  Medicine,
+  subscribeMedicines,
+  searchMedicines,
+} from "@/lib/medicines";
 
 export default function Medicines() {
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    return subscribeMedicines(setMedicines);
+  }, []);
+
   const displayedMedicines =
     searchQuery.trim() === ""
-      ? ALL_MEDICINES
-      : searchMedicines(searchQuery);
+      ? medicines
+      : searchMedicines(medicines, searchQuery);
+
   return (
     <main className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 md:px-8">
@@ -92,7 +103,7 @@ export default function Medicines() {
                   name={item.name} 
                   category={item.category} 
                   price={item.price} 
-                  image={item.image} 
+                  image={item.imageURL || ""} 
                 />
               ))
               ) : (

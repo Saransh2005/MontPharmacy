@@ -63,7 +63,13 @@ export default function Cart() {
           <div className="lg:w-2/3 space-y-4">
             {cart.map((item) => (
               <div key={item.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div className="h-20 w-20 bg-slate-100 rounded-lg flex items-center justify-center text-2xl">💊</div>
+                <div className="h-20 w-20 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
+                  {item.image ? (
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl">💊</span>
+                  )}
+                </div>
                 
                 <div className="flex-1">
                   <h3 className="font-bold text-slate-800">{item.name}</h3>
