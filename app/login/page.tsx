@@ -13,9 +13,12 @@ export default function Login() {
 
   const { user, loading, login, loginWithGoogle, error, clearError } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/";
+  const [redirectTo, setRedirectTo] = useState("/");
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+  setRedirectTo(params.get("redirect") || "/");
+}, []);
   useEffect(() => {
     if (!loading && user) {
       router.replace(redirectTo);
