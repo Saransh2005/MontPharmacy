@@ -32,7 +32,7 @@ export default function Contact() {
   };
   return (
     <main className="min-h-screen bg-slate-50 py-12">
-      
+
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-slate-800">Get in Touch</h1>
@@ -41,7 +41,7 @@ export default function Contact() {
 
       <div className="container mx-auto px-4 md:px-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
-          
+
           {/* Left Side: Contact Information */}
           <div className="md:w-1/3 bg-teal-900 text-white p-8 md:p-12 flex flex-col justify-between">
             <div>
@@ -49,7 +49,7 @@ export default function Contact() {
               <p className="text-teal-100 mb-8 leading-relaxed">
                 Fill up the form and our team will get back to you within 24 hours. For medical emergencies, please visit the nearest hospital.
               </p>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <Phone className="text-teal-400 mt-1" size={20} />
@@ -58,7 +58,7 @@ export default function Contact() {
                     <p className="text-teal-100 text-sm">+91 98765 43210</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <Mail className="text-teal-400 mt-1" size={20} />
                   <div>
@@ -90,14 +90,14 @@ export default function Contact() {
 
             {/* Decorative Circle */}
             <div className="relative mt-12">
-               <div className="w-32 h-32 bg-teal-800 rounded-full opacity-50 absolute -bottom-20 -right-20"></div>
+              <div className="w-32 h-32 bg-teal-800 rounded-full opacity-50 absolute -bottom-20 -right-20"></div>
             </div>
           </div>
 
           {/* Right Side: Contact Form */}
           <div className="md:w-2/3 p-8 md:p-12">
             <h2 className="text-2xl font-bold text-slate-800 mb-6">Send us a Message</h2>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Name */}
@@ -107,7 +107,6 @@ export default function Contact() {
                     id="name"
                     type="text"
                     name="name"
-                    placeholder="John Doe"
                     required
                     className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
                   />
@@ -119,7 +118,6 @@ export default function Contact() {
                     id="email"
                     type="email"
                     name="_replyto"
-                    placeholder="john@example.com"
                     required
                     className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
                   />
@@ -148,7 +146,6 @@ export default function Contact() {
                   id="message"
                   name="message"
                   rows={4}
-                  placeholder="Type your message here..."
                   required
                   className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none"
                 />

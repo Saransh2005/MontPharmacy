@@ -274,7 +274,6 @@ export default function AdminPage() {
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, category: e.target.value }))
                   }
-                  placeholder="e.g. Fever, Skincare"
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                 />
               </div>
@@ -344,7 +343,6 @@ export default function AdminPage() {
                     onChange={(e) =>
                       setForm((prev) => ({ ...prev, imageURL: e.target.value }))
                     }
-                    placeholder="https://example.com/medicine-image.jpg"
                     className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                   />
                   {form.imageURL && (
