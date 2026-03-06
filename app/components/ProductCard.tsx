@@ -38,7 +38,7 @@ const ProductCard = ({ id, name, category = "", price, image }: ProductProps) =>
   return (
     <Link href={`/medicines/${id}`} className="block group">
       <div className="bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col justify-between">
-        
+
         <div className="relative h-48 w-full bg-slate-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
           {image ? (
             <img
@@ -55,10 +55,10 @@ const ProductCard = ({ id, name, category = "", price, image }: ProductProps) =>
           <p className="text-xs font-bold text-teal-600 uppercase tracking-wider">{category}</p>
           <h3 className="text-lg font-bold text-slate-800 line-clamp-1">{name}</h3>
         </div>
-        
+
         <div className="flex items-center justify-between mt-4">
           <span className="text-xl font-extrabold text-slate-900">₹{price}</span>
-          
+
           {quantity === 0 ? (
             <button
               className="bg-teal-50 text-teal-700 p-2 rounded-lg hover:bg-teal-600 hover:text-white transition-all flex items-center gap-2 text-sm font-bold z-10"

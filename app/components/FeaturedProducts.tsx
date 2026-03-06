@@ -19,7 +19,7 @@ const FeaturedProducts = () => {
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 md:px-8">
-        
+
         {/* Section Heading */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
           <div>
@@ -32,13 +32,13 @@ const FeaturedProducts = () => {
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {featured.map((item) => (
-            <ProductCard 
-              key={item.id} 
+            <ProductCard
+              key={item.id}
               id={item.id}
-              name={item.name} 
-              category={item.category} 
-              price={item.price} 
-              image={item.imageURL || ""} 
+              name={item.name}
+              category={item.category}
+              price={item.price}
+              image={item.imageURL || ""}
             />
           ))}
         </div>
